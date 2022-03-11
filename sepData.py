@@ -3,14 +3,18 @@ import argparse
 
 def getArgs() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path', type=str, default=r'E:\Computer\code\Python\machine learning\scientific research\乳腺AI - 副本\3Ddata', help='the path of dataset')
+    parser.add_argument('--cfgpath', type=str, default='./cfg.yaml', help='the path of cfg.yaml')
     parser.add_argument('--isDel', type=bool, default=True, help='whether to delete original data')
     parser.add_argument('--sepr', type=list, default=[0.7, 0.3, 0], help='the proportion of train, val, dectect')
     args = parser.parse_args()
     return args
 
 def main(args:argparse.Namespace):
-    rootPath = args.path
+    fp = open(args.cfgpath, "r", encoding="utf-8")
+    cfg = fp.read()
+    cfg = yaml.safe_load(cfg)
+    rootPath = cfg.get('datasetPath', './')
+
     dataPath = rootPath + r"\data"
     trainPath = rootPath + r"\train"
     testPath = rootPath + r"\val"

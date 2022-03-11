@@ -1,2 +1,4 @@
 videoPath: ./
 savePath: ./
+# where to build the dataset
+datasetPath: ./
