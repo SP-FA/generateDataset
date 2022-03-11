@@ -13,7 +13,13 @@ class SeparateData:
         '''
 
         # Get the total size of the data set
-        self.tot = len(os.listdir(dataPath + r"\images"))
+        fileList = os.listdir(dataPath + r"\images")
+        self.tot = len(fileList)
+        for f in fileList:
+            fileDetail = os.path.splitext(f)
+            self.fileName = fileDetail[0][:-3]
+            self.fileExte = fileDetail[1]
+            break
         self.dataPath = dataPath
         # Get train size, test size and print them
         self.testSize = int(self.tot * lst[1])
@@ -26,7 +32,7 @@ class SeparateData:
         print("val size: ", self.testSize)
         print("detect size: ", self.detectSize)
 
-    def getRandomList(self, num: int, selected: list=[]) -> list:
+    def getRandomList(self, num: int, selected=None) -> list:
         '''
         This function is used to choose some data randomly.
 
@@ -37,6 +43,8 @@ class SeparateData:
         RETURN:
          Return a list represents the serial number of the data, randomly.
         '''
+        if selected is None:
+            selected = []
         lst = []
         for i in range(0, num):
             # Loops until r is not in lst and selected. That means r
@@ -48,7 +56,7 @@ class SeparateData:
                     break
         return lst
 
-    def copyData(self, i: int, path: str, fileName: str=""):
+    def copyData(self, i: int, path: str):
         '''
         There must be two folders under the given path, 'images' and 'labels'
         and this function will copy the images and labels into given folders respectively.
@@ -57,9 +65,9 @@ class SeparateData:
          @ i: The serial number of the data.
          @ path: Where the data will be copied to.
         '''
-        JPG = self.dataPath + "\\images\\" + fileName + "(" + str(i) + ").jpg"
-        TXT = self.dataPath + "\\labels\\" + fileName + "(" + str(i) + ").txt"
-        shutil.copy(JPG, path + r"\images")
+        EXT = self.dataPath + "\\images\\" + self.fileName + "(" + str(i) + ")" + self.fileExte
+        TXT = self.dataPath + "\\labels\\" + self.fileName + "(" + str(i) + ").txt"
+        shutil.copy(EXT, path + r"\images")
         shutil.copy(TXT, path + r"\labels")
 
     def deleteData(self, path: str):
@@ -85,7 +93,6 @@ class SeparateData:
     def randomSep(self, trainPath: str,
                         testPath: str,
                         detectPath: str="",
-                        fileName: str="",
                         isDataDelete: bool=False):
         '''
         Separate data set into train, test, detect set, or just train and test set.
@@ -105,12 +112,12 @@ class SeparateData:
         detectList = self.getRandomList(self.detectSize, testList)
 
         for i in testList:
-            self.copyData(i, testPath, fileName)
+            self.copyData(i, testPath)
         for i in detectList:
-            self.copyData(i, detectPath, fileName)
+            self.copyData(i, detectPath)
         for i in range(0, self.tot):
             if not((i in testList) or (i in detectList)):
-                self.copyData(i, trainPath, fileName)
+                self.copyData(i, trainPath)
 
 
 if __name__ == "__main__":
@@ -121,5 +128,5 @@ if __name__ == "__main__":
     detectPath = rootPath + r"\detect"
 
     sd = SeparateData([0.7, 0.3, 0], dataPath)
-    sd.randomSep(trainPath, testPath, fileName="apexCheater", isDataDelete=True)
+    sd.randomSep(trainPath, testPath, isDataDelete=True)
     print("finished")

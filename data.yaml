@@ -1,0 +1,4 @@
+names: []
+nc: 2
+train: ./train/images
+val: ./val/images
