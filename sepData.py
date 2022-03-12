@@ -2,6 +2,7 @@ from lib.separateData import SeparateData
 import argparse
 import yaml
 
+
 def getArgs() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument('--cfgpath', type=str, default='./cfg.yaml', help='the path of dataset')
@@ -9,6 +10,7 @@ def getArgs() -> argparse.Namespace:
     parser.add_argument('--sepr', type=list, default=[0.7, 0.3, 0], help='the proportion of train, val, dectect')
     args = parser.parse_args()
     return args
+
 
 def main(args:argparse.Namespace):
     fp = open(args.cfgpath, "r", encoding="utf-8")
@@ -23,6 +25,7 @@ def main(args:argparse.Namespace):
 
     sd = SeparateData(args.sepr, dataPath)
     sd.randomSep(trainPath, testPath, detectPath, args.isDel)
+
 
 if __name__ == '__main__':
     args = getArgs()

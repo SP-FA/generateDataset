@@ -2,6 +2,7 @@ import os
 import shutil
 import random
 
+
 class SeparateData:
     def __init__(self, lst: list, dataPath: str):
         '''
@@ -32,6 +33,7 @@ class SeparateData:
         print("val size: ", self.testSize)
         print("detect size: ", self.detectSize)
 
+
     def getRandomList(self, num: int, selected=None) -> list:
         '''
         This function is used to choose some data randomly.
@@ -56,6 +58,7 @@ class SeparateData:
                     break
         return lst
 
+
     def copyData(self, i: int, path: str):
         '''
         There must be two folders under the given path, 'images' and 'labels'
@@ -69,6 +72,7 @@ class SeparateData:
         TXT = self.dataPath + "\\labels\\" + self.fileName + "(" + str(i) + ").txt"
         shutil.copy(EXT, path + r"\images")
         shutil.copy(TXT, path + r"\labels")
+
 
     def deleteData(self, path: str):
         '''
@@ -89,6 +93,7 @@ class SeparateData:
         os.chdir(txtPath)
         for data in os.listdir(txtPath):
             os.remove(data)
+
 
     def randomSep(self, trainPath: str,
                         testPath: str,

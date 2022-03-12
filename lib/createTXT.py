@@ -1,5 +1,6 @@
 import os
 
+
 class CreateTXT:
     def __init__(self, path:str):
         self.path = path
@@ -16,10 +17,17 @@ class CreateTXT:
 
     def generateTXT(self) -> None:
         for image in self.images:
-            file = open(self.path + "\\" + image + ".txt", 'w')
-            file.close()
+            fp = open(self.path + "\\" + image + ".txt", 'w')
+            fp.close()
+
+    def genClasses(self, names:list) -> None:
+        fp = open(self.path + "\\classes.txt", 'w')
+        for i in names:
+            fp.write(i + "\n")
+        fp.close()
+
 
 if __name__ == "__main__":
     path = ""
-    a = createTXT(path)
+    a = CreateTXT(path)
     a.generateTXT()
