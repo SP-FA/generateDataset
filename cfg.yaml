@@ -1,4 +1,5 @@
-videoPath: ./
-savePath: ./
+videoPath: E:\Computer\code\Python\machine_learning\scientific_research\testVideo
+savePath: E:\Computer\code\Python\machine_learning\scientific_research\testVideo
 # where to build the dataset
-datasetPath: ./
+datasetPath: E:\Computer\code\Python\machine_learning\scientific_research\test
+yoloPath: E:\Computer\code\Python\machine_learning\scientific_research\yolov5-6.0

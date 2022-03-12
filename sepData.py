@@ -1,9 +1,10 @@
 from lib.separateData import SeparateData
 import argparse
+import yaml
 
 def getArgs() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument('--cfgpath', type=str, default='./cfg.yaml', help='the path of cfg.yaml')
+    parser.add_argument('--cfgpath', type=str, default='./cfg.yaml', help='the path of dataset')
     parser.add_argument('--isDel', type=bool, default=True, help='whether to delete original data')
     parser.add_argument('--sepr', type=list, default=[0.7, 0.3, 0], help='the proportion of train, val, dectect')
     args = parser.parse_args()
