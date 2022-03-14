@@ -95,10 +95,10 @@ class SeparateData:
             os.remove(data)
 
 
-    def randomSep(self, trainPath: str,
-                        testPath: str,
-                        detectPath: str="",
-                        isDataDelete: bool=False):
+    def randomSep(self, trainPath:str,
+                        testPath:str,
+                        detectPath:str,
+                        isDataDelete:bool):
         '''
         Separate data set into train, test, detect set, or just train and test set.
 
@@ -111,15 +111,17 @@ class SeparateData:
         if isDataDelete:
             self.deleteData(trainPath)
             self.deleteData(testPath)
-            self.deleteData(detectPath)
+            if self.detectSize != 0:
+                self.deleteData(detectPath)
 
         testList = self.getRandomList(self.testSize)
         detectList = self.getRandomList(self.detectSize, testList)
 
         for i in testList:
             self.copyData(i, testPath)
-        for i in detectList:
-            self.copyData(i, detectPath)
+        if self.detectSize != 0:
+            for i in detectList:
+                self.copyData(i, detectPath)
         for i in range(0, self.tot):
             if not((i in testList) or (i in detectList)):
                 self.copyData(i, trainPath)
