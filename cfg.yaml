@@ -1,7 +1,7 @@
 videoPath: E:\Computer\code\Python\machine_learning\scientific_research\ApexCheater\detect
-savePath: E:\Computer\code\Python\machine_learning\scientific_research\ApexCheater
+savePath: H:\ABM\data\img
 # where to build the dataset
-datasetPath: E:\Computer\code\Python\machine_learning\scientific_research\ApexCheater
+datasetPath: H:\ABM\data
 yoloPath: E:\Computer\code\Python\machine_learning\scientific_research\yolov5-6.0
 
 nc: 2
