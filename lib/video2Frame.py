@@ -61,13 +61,13 @@ class Video2Frame:
         success, image = vidCap.read()
         cnt = 0
         while success:
-            success, image = vidCap.read()
             cnt += 1
             if cnt % self.timeInterval == 0:
-                cv2.imencode('.jpg', image)[1].tofile(self.savePath + "\\" + folderName + r"\frame%d.jpg" % cnt)
+                cv2.imencode('.jpg', image)[1].tofile(self.savePath + "\\" + folderName + "\\frame%d.jpg" % cnt)
             if lmt != None:
                 if cnt // self.timeInterval == lmt:
                     break
+            success, image = vidCap.read()
         print(folderName + ": ", cnt // self.timeInterval, "images")
 
         if genTXT == True:

@@ -24,7 +24,7 @@ class SeparateData:
                 j = i.strip().split(" ")
                 seq = ""
                 for k in j[1:]:
-                    seq = seq + k
+                    seq = seq + k + " "
                 self.labelDict.append(seq)
             fp.close()
 
@@ -99,9 +99,11 @@ class SeparateData:
                 fp = open(path + "\\labels\\label.txt", 'a')
             seqList = []
             for i in lst:
-                name = "(" + str(i) + ").jpg"
+                name = "(" + str(i) + ")" + self.fileExte
                 seq = name + " " + self.labelDict[i] + "\n"
                 seqList.append(seq)
+                EXT = self.dataPath + "\\images\\" + self.fileName + name
+                shutil.copy(EXT, path + r"\images")
             fp.writelines(seqList)
             fp.close()
 

@@ -23,8 +23,9 @@
 ### sepData.py
 
 1. `--cfgpath`
-2. `--isDel`: 是否删除文件夹内已有的数据，bool
+2. `--isDel`: 是否删除文件夹内已有的文件，bool
 3. `--sepr`: 数据分割的比例，list 内有三个元素，分别表示 `train`, `test`, `detect` 的比例，小于 1，可以为 0，list
+4. `--haveLabel`: 如果每个图片都有一个对应的 txt 文件，则设为 1（默认），如果标签是以其它类型保存，则设为 0（为了适应其它模型），int
 
 
 ### initDataset.py
@@ -33,25 +34,11 @@
 
 ## 03. 配置文件
 
-配置文件是一个 `.yaml` 文件，可以写入一下两个参数：
+配置文件是一个 `.yaml` 文件，可以写入以下参数：
 
 1. `videoPath`: 视频文件夹的路径
 2. `savePath`: 视频保存路径
 3. `datasetPath`: 数据集的路径，用于创建数据集和数据分割
 4. `yoloPath`: yolo 的路径，现阶段仅支持 yolo
-
-## 04. Package 中可使用的方法
-
-`Video2Frame` 类里包含了三个方法：
-
-1. `getVideoList()->list`: 获取 videoPath 下的视频列表
-2. `getFrames(args:list, genTXT:bool)->None`: 将 args 区间内的视频转换成图片（从 0 开始）
-3. `getFrameFromVideo(i:int, genTXT:bool, lmt:int)->None`: 将第 i 个视频转换成图片（从 0 开始）
-
-`CreateTXT` 类：
-
-`generateTXT()->None`: 对于给定路径下没有对应 txt 文件的图片，生成对应的 txt 文件
-
-`SeparateData` 类：
-
-`randomSep(self, trainPath:str, testPath:str, detectPath:str, isDataDelete:bool)->None`: 对数据进行分割，`isDataDelete` 可以选择是否删除文件夹内已有的数据
+5. `nc`: 分为几类 (yolo)
+6. `names`: 每一类的名字，list (yolo)

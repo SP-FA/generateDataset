@@ -8,7 +8,7 @@ def getArgs() -> argparse.Namespace:
     parser.add_argument('--cfgpath', type=str, default='./cfg.yaml', help='the path of dataset')
     parser.add_argument('--isDel', type=int, default=1, help='whether to delete original data')
     parser.add_argument('--sepr', default=[0.7, 0.3, 0], nargs='+', type=float, help='the proportion of train, val, dectect')
-    parser.add_argument('--haveLabel', type=int, default=1, help='set True if the dataset have label as a .txt file')
+    parser.add_argument('--haveLabel', type=int, default=1, help='set 1 if the dataset have label as a .txt file')
     args = parser.parse_args()
     return args
 
