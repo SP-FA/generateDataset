@@ -1,6 +1,6 @@
 # generate dataset
 
-![head](.\pic\head.png)
+![head](pic\head.png)
 
 <br>
 
