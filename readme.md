@@ -1,6 +1,7 @@
+![](pic/head.png)
+
 # generate dataset
 
-![](pic\head.png)
 
 <br>
 
