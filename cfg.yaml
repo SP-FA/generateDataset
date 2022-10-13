@@ -1,9 +1,11 @@
+# model : yolov5, yolov7, other
+model: yolov7
 # getImages.py
 videoPath: H:\GenshinImpact_Data\video
 savePath: H:\GenshinImpact_Data\allEnemy
 # where to build the dataset
-datasetPath: E:\Computer\AI\scientific_research\csgoCheater
+datasetPath: E:\Computer\AI\scientific_research\GenshinImpact\Instance
 yoloPath: E:\Computer\AI\scientific_research\yolov5-6.0
 
-nc: 2
-names: ["body", "head"]
+nc: 1
+names: ["target"]

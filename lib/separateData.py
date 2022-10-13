@@ -4,7 +4,7 @@ import random
 
 
 class SeparateData:
-    def __init__(self, lst: list, dataPath: str, haveLabel: bool=False):
+    def __init__(self, lst: list, model: str, datasetPath: str):
         '''
         Initialise the class and print the size of train, test, detect set
 
@@ -13,10 +13,9 @@ class SeparateData:
           @ dataPath: The path of the data set
           @ haveLabel: The label.txt file for each pic
         '''
-        self.haveLabel = haveLabel
-
-        if haveLabel == False:
-            labelPath = r"H:\ABM\data\label.txt"
+        self.model = model
+        if model == 'other':
+            labelPath = datasetPath+"\\data\\label.txt"
             fp = open(labelPath, 'r')
             labelList = fp.readlines()
             self.labelDict = []
@@ -29,13 +28,13 @@ class SeparateData:
             fp.close()
 
         # Get the total size of the data set
-        fileList = os.listdir(dataPath + r"\images")
+        fileList = os.listdir(datasetPath + "//data//images")
         self.tot = len(fileList)
         fileDetail = os.path.splitext(fileList[0])
         self.fileName = fileDetail[0][:-3]
         self.fileExte = fileDetail[1]
 
-        self.dataPath = dataPath
+        self.datasetPath = datasetPath
         # Get train size, test size and print them
         self.valSize = int(self.tot * lst[1])
         self.detectSize = 0
@@ -74,76 +73,68 @@ class SeparateData:
         return lst
 
 
-    # def copyData(self, i: int, path: str):
-    def copyData(self, lst, path:str, isDataDelete: bool):
+    def copyData(self, lst, path: list, isDataDelete: bool):
         '''
         There must be two folders under the given path, 'images' and 'labels'
         and this function will copy the images and labels into given folders respectively.
 
         PARAMETERS:
-         @ i: The serial number of the data.
+         @ lst: The serial number of the data.
          @ path: Where the data will be copied to.
+         @ isDataDelete: Whether to delete original data. Default value isDataDelete=False.
         '''
-
-        if self.haveLabel == True:
+        if self.model == 'yolov5' or self.model == 'yolov7':
             for i in lst:
-                EXT = self.dataPath + "\\images\\" + self.fileName + "(" + str(i) + ")" + self.fileExte
-                TXT = self.dataPath + "\\labels\\" + self.fileName + "(" + str(i) + ").txt"
-                shutil.copy(EXT, path + r"\images")
-                shutil.copy(TXT, path + r"\labels")
+                name = self.fileName + "(" + str(i) + ")"
+                IMG = self.datasetPath + "\\data\\images\\" + name + self.fileExte
+                TXT = self.datasetPath + "\\data\\labels\\" + name + ".txt"
+                shutil.copy(IMG, path[0])
+                shutil.copy(TXT, path[1])
         else:
-            fp = None
-            if isDataDelete == True:
-                fp = open(path + "\\labels\\label.txt", 'w')
-            else:
-                fp = open(path + "\\labels\\label.txt", 'a')
+            fp = open(path[1] + "\\label.txt", 'w' if isDataDelete == True else 'a')
             seqList = []
             for i in lst:
                 name = "(" + str(i) + ")" + self.fileExte
                 seq = name + " " + self.labelDict[i] + "\n"
                 seqList.append(seq)
-                EXT = self.dataPath + "\\images\\" + self.fileName + name
-                shutil.copy(EXT, path + r"\images")
+                IMG = self.datasetPath + "\\data\\images\\" + self.fileName + name
+                shutil.copy(IMG, path[0])
             fp.writelines(seqList)
             fp.close()
 
 
-    def deleteData(self, path: str):
+    def deleteData(self, path: list):
         '''
         Delete the data under the given path.
         There must be two folders under the given path, 'images' and 'labels'.
-
-        PARAMETER:
-         @ path: The path you want to delete data under it.
         '''
-        if path == "":
-            return
-
-        jpgPath = path + r"\images"
-        os.chdir(jpgPath)
-        for data in os.listdir(jpgPath):
+        os.chdir(path[0])
+        for data in os.listdir(path[0]):
+            os.remove(data)
+        os.chdir(path[1])
+        for data in os.listdir(path[1]):
             os.remove(data)
 
-        if self.haveLabel == True:
-            txtPath = path + r"\labels"
-            os.chdir(txtPath)
-            for data in os.listdir(txtPath):
-                os.remove(data)
 
-
-    def randomSep(self, trainPath:str,
-                        valPath:str,
-                        detectPath:str,
-                        isDataDelete:bool):
+    def randomSep(self, isDataDelete: bool):
         '''
         Separate data set into train, test, detect set, or just train and test set.
 
         PARAMETERS:
-         @ trainPath: The path of train set.
-         @ valPath: The path of test set.
-         @ detectPath: The path of detect set. Default value detectPath="".
          @ isDataDelete: Whether to delete original data. Default value isDataDelete=False.
         '''
+        trainPath = []
+        valPath = []
+        detectPath = []
+        if self.model == 'yolov5' or self.model == 'other':
+            trainPath = [self.datasetPath+"\\train\\images", self.datasetPath+"\\train\\labels"]
+            valPath = [self.datasetPath+"\\val\\images", self.datasetPath+"\\val\\labels"]
+            detectPath = [self.datasetPath+"\\detect\\images", self.datasetPath+"\\detect\\labels"]
+        elif self.model == 'yolov7':
+            trainPath = [self.datasetPath+"\\images\\train", self.datasetPath+"\\labels\\train"]
+            valPath = [self.datasetPath+"\\images\\val", self.datasetPath+"\\labels\\val"]
+            detectPath = [self.datasetPath+"\\images\\detect", self.datasetPath+"\\labels\\detect"]
+
         if isDataDelete:
             self.deleteData(trainPath)
             self.deleteData(valPath)
@@ -165,11 +156,7 @@ class SeparateData:
 
 if __name__ == "__main__":
     rootPath = r"H:\ABM\data"
-    dataPath = rootPath + r"\data"
-    trainPath = rootPath + r"\train"
-    valPath = rootPath + r"\val"
-    detectPath = rootPath + r"\detect"
 
-    sd = SeparateData([0.7, 0.3, 0], dataPath)
-    sd.randomSep(trainPath, valPath, detectPath, isDataDelete=True)
+    sd = SeparateData([0.7, 0.3, 0], 'yolov5', rootPath)
+    sd.randomSep(isDataDelete=True)
     print("finished")

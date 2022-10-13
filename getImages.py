@@ -14,20 +14,15 @@ def getArgs() -> argparse.Namespace:
     return args
 
 
-def main(args):
+if __name__ == "__main__":
+    args = getArgs()
     fp = open(args.cfgpath, "r", encoding='utf-8')
     cfg = fp.read()
     cfg = yaml.safe_load(cfg)
     videoPath = cfg.get('videoPath', './')
     savePath = cfg.get('savePath', './')
-
     names = cfg.get('names', [])
 
     v2f = Video2Frame(videoPath, savePath, args.interval)
     v2f.getFrames(args.video, args.genTXT, args.limit, names)
     fp.close()
-
-
-if __name__ == "__main__":
-    args = getArgs()
-    main(args)

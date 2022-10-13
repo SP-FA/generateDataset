@@ -10,28 +10,44 @@ def getArgs() -> argparse.Namespace:
     return args
 
 
-def generateFolder(path:str, folderName:str) -> None:
-    os.chdir(path)
-    if not os.path.exists(folderName):
-        os.mkdir(folderName)
-    os.chdir(path+"\\"+folderName)
-    if not os.path.exists("images"):
-        os.mkdir("images")
-    if not os.path.exists("labels"):
-        os.mkdir("labels")
-    os.chdir("../")
+def generateFolder(model, path:str, folderName:str) -> None:
+    if folderName == 'data' or model == 'yolov5' or model == 'other':
+        os.chdir(path)
+        if not os.path.exists(folderName):
+            os.mkdir(folderName)
+        os.chdir(path+"\\"+folderName)
+        if not os.path.exists("images"):
+            os.mkdir("images")
+        if not os.path.exists("labels"):
+            os.mkdir("labels")
+
+    elif model == 'yolov7' and folderName != 'data':
+        os.chdir(path)
+        if not os.path.exists("images"):
+            os.mkdir("images")
+        if not os.path.exists("labels"):
+            os.mkdir("labels")
+        os.chdir(path+"\\images")
+        if not os.path.exists(folderName):
+            os.mkdir(folderName)
+        os.chdir(path+"\\labels")
+        if not os.path.exists(folderName):
+            os.mkdir(folderName)
 
 
 def generateYaml(yoloPath:str, datasetPath:str, nc:int, names:list) -> dict:
     dct = {}
     dct["names"] = names
     dct["nc"] = nc
-    dct["val"] = os.path.relpath(datasetPath, yoloPath)+r"\val\images"
-    dct["train"] = os.path.relpath(datasetPath, yoloPath)+r"\train\images"
+    dct["val"] = os.path.relpath(datasetPath, yoloPath)+r"\images\val"
+    dct["train"] = os.path.relpath(datasetPath, yoloPath)+r"\images\train"
     return dct
 
 
-def main(args:argparse.Namespace):
+if __name__ == "__main__":
+    model = ['yolov5', 'yolov7', 'other']
+    args = getArgs()
+
     fp = open(args.cfgpath, "r", encoding='utf-8')
     cfg = fp.read()
     cfg = yaml.safe_load(cfg)
@@ -39,17 +55,15 @@ def main(args:argparse.Namespace):
     yoloPath = cfg.get('yoloPath', './')
     nc = cfg.get('nc', 0)
     names = cfg.get('names', [])
+    thisModel = cfg.get('model', 'other')
+    if thisModel not in model:
+        thisModel = 'other'
 
-    generateFolder(datasetPath, "data")
-    generateFolder(datasetPath, "train")
-    generateFolder(datasetPath, "val")
-    generateFolder(datasetPath, "detect")
+    generateFolder(thisModel, datasetPath, "data")
+    generateFolder(thisModel, datasetPath, "train")
+    generateFolder(thisModel, datasetPath, "val")
+    generateFolder(thisModel, datasetPath, "detect")
 
     dataYaml = generateYaml(yoloPath, datasetPath, nc, names)
     with open(datasetPath+"\\"+"data.yaml", "w", encoding="utf-8") as fp:
         yaml.dump(dataYaml, fp, allow_unicode=True)
-
-
-if __name__ == "__main__":
-    args = getArgs()
-    main(args)
